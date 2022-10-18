@@ -8,7 +8,8 @@ products_all = pd.DataFrame()
 
 db = sqlite3.connect('test_database')
 c = db.cursor()
-
+c.execute('CREATE TABLE IF NOT EXISTS coffee (title text, handle text, vendor text)')
+db.commit()
 
 def get_json(url):
     # Get data from url using requests
@@ -31,8 +32,9 @@ for url in coffee_sites:
 
 
 coffee_df = products_all[products_all['product_type'] == 'Coffee']
-coffee_df.to_sql('products_table', db, if_exists='replace', index=False)
-pd.read_sql('select * from products_table', db)
+coffee_df.to_clipboard()
+coffee_df.to_sql('coffee', db, if_exists='replace', index=False)
+pd.read_sql('select * from coffee', db)
 
 
 
