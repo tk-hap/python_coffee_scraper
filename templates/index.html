@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} List of coffee {% endblock %}</h1>
+    {% for coffee in coffee_products %}
+    <a href="{{ url_for('single_product', product_id=coffee['id']) }}">
+        <h2>{{ coffee['title'] }}</h2>
+    </a>
+    <span class="badge bg-primary">{{ coffee['vendor'] }}</span>
+    <hr>
+    {% endfor %}
+{% endblock %}
