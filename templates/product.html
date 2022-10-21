@@ -3,5 +3,5 @@
 {% block content %}
     <h2>{% block title %} {{ product['title'] }} {% endblock %}</h2>
     <span class="badge bg-primary">{{ product['vendor'] }}</span>
-    <p>{{ product['body_html'] }}</p>
+    <p>{{ product['body_html'] | safe }}</p>
 {% endblock %}
