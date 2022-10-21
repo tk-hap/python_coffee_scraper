@@ -3,15 +3,14 @@ from numpy import int64
 import requests
 import pandas as pd
 import sqlite3
-import flask
+import re
 
-coffee_sites = ['https://folkbrewers.co.nz/products.json', 'https://greyroastingco.com/products.json']
+coffee_sites = ['https://folkbrewers.co.nz/products.json', 'https://greyroastingco.com/products.json', 'https://redrabbitcoffee.co.nz/products.json']
 products_json = {}
 products_all = pd.DataFrame()
 
 db = sqlite3.connect('test_database')
 c = db.cursor()
-c.execute('CREATE TABLE IF NOT EXISTS coffee_products (title text)')
 db.commit()
 
 def get_json(url):
@@ -32,9 +31,11 @@ for url in coffee_sites:
     products_df = transform_df(products_json)
     products_all = pd.concat([products_all, products_df], ignore_index=True)
     
+# Conditions to filter data from dataframes
+cond_coffee = products_all['product_type'] == 'Coffee'
+cond_notSub = products_all['title'].str.contains('Subscription') == False
 
-
-coffee_df = products_all[products_all['product_type'] == 'Coffee']
+coffee_df = products_all[cond_coffee & cond_notSub]
 
 # Converts total dataframe to str
 coffee_df = coffee_df.astype(str)
