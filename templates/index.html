@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} List of coffee {% endblock %}</h1>
+    <h1>{% block title %}  {% endblock %}</h1>
    
     <div class="container text-center">
         {% for coffees in coffee_products|batch(3) %}
-        <div class="row">
-        {% for coffee in coffees %}
-        <div class="col">
-            <div class="card">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+         {% for coffee in coffees %}
+         <div class="col mb-3">
+            <div class="card h-100">
+                <img src="{{ coffee['images']}}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <a href="{{ url_for('single_product', product_id=coffee['id']) }}" class="stretched-link">
                         <h3 class="card-title">{{ coffee['title'] }}</h3>
@@ -16,7 +17,7 @@
                  <span class="badge bg-primary">{{ coffee['vendor'] }}</span>
                 </div>
             </div>
-        </div>
+         </div>
         {% endfor %}
         </div>
       {% endfor %}
