@@ -2,22 +2,29 @@
 #(venv) $env:FLASK_APP = 'web_app.py'
 #(venv) $env:FLASK_ENV = 'development'
 #(venv)  flask run
-
-import sqlite3
+import psycopg2
+import psycopg2.extras
 from flask import Flask, render_template
 from werkzeug.exceptions import abort
+
 
 app = Flask(__name__)
 
 def get_db_connection():
-    conn = sqlite3.connect('test_database')
-    conn.row_factory = sqlite3.Row
-    return conn
+    conn = psycopg2.connect(
+        host='web-db-prod-01.cqqsz59wf4te.ap-southeast-2.rds.amazonaws.com',
+        dbname='postgres',
+        user='postgres',
+        password='5a$78Fs#JFt7eG'
+    )
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    return cur
 
 def get_product(product_id):
-    conn = get_db_connection()
-    product = conn.execute('SELECT * FROM coffee WHERE id = ?',(product_id,)).fetchone()
-    conn.close()
+    cur = get_db_connection()
+    cur.execute('SELECT * FROM coffee WHERE id = %s',(product_id,))
+    product = cur.fetchone()
+    cur.close()
     if product is None:
         abort(404)
     return product
@@ -25,9 +32,10 @@ def get_product(product_id):
 
 @app.route('/')
 def index():
-    conn = get_db_connection()
-    coffee_products = conn.execute('SELECT * FROM coffee').fetchall()
-    conn.close()
+    cur = get_db_connection()
+    cur.execute('SELECT * FROM coffee;')
+    coffee_products = cur.fetchall()
+    cur.close()
     return render_template('index.html', coffee_products=coffee_products)
 
 @app.route('/<int:product_id>')

@@ -1,17 +1,16 @@
-from turtle import st
+#from turtle import st
 from numpy import int64
 import requests
 import pandas as pd
 import sqlite3
-import re 
+from sqlalchemy import create_engine
+import psycopg2
 
 COFFEE_SITES = ['https://folkbrewers.co.nz/products.json', 'https://greyroastingco.com/products.json', 'https://redrabbitcoffee.co.nz/products.json']
 products_json = {}
 products_all = pd.DataFrame()
 
-db = sqlite3.connect('test_database')
-c = db.cursor()
-db.commit()
+db = create_engine('postgresql+psycopg2://postgres:5a$78Fs#JFt7eG@web-db-prod-01.cqqsz59wf4te.ap-southeast-2.rds.amazonaws.com:5432/postgres')
 
 def get_json(url):
     """ 
@@ -79,8 +78,6 @@ coffee_df['images'] = coffee_df['images'].str.extract(r"(?i)\b((?:https?://|www\
 coffee_df.to_sql('coffee', db, if_exists='replace', index=False)
 pd.read_sql('select * from coffee', db)
 
-
-db.close()
 
 
 

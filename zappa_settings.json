@@ -1,0 +1,15 @@
+{
+    "dev": {
+        "app_function": "web_app.app",
+        "aws_region": "ap-southeast-2",
+        "profile_name": "tk-personal",
+        "project_name": "python-coffee-",
+        "runtime": "python3.8",
+        "s3_bucket": "zappa-ts8olgg7w",
+        "slim_handler": true,
+        "vpc_config" : {
+            "SubnetIds": ["subnet-0c174bd9e6de92dce", "subnet-0dde9ea39e5844da2", "subnet-06af59bc310419e1e"],
+            "SecurityGroupIds": [ "sg-0f8aae3312a13866c" ]
+        }
+    }
+}
