@@ -2,29 +2,17 @@
 #(venv) $env:FLASK_APP = 'web_app.py'
 #(venv) $env:FLASK_ENV = 'development'
 #(venv)  flask run
-import psycopg2
-import psycopg2.extras
+import boto3
 from flask import Flask, render_template
 from werkzeug.exceptions import abort
 
+dynamodb_resource = boto3.resource('dynamodb')
+table = dynamodb_resource.Table('test_table')
 
 app = Flask(__name__)
 
-def get_db_connection():
-    conn = psycopg2.connect(
-        host='web-db-prod-01.cqqsz59wf4te.ap-southeast-2.rds.amazonaws.com',
-        dbname='postgres',
-        user='postgres',
-        password='5a$78Fs#JFt7eG'
-    )
-    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    return cur
-
 def get_product(product_id):
-    cur = get_db_connection()
-    cur.execute('SELECT * FROM coffee WHERE id = %s',(product_id,))
-    product = cur.fetchone()
-    cur.close()
+    product = table.get_item(Key={'id':product_id})["Item"]
     if product is None:
         abort(404)
     return product
@@ -32,10 +20,7 @@ def get_product(product_id):
 
 @app.route('/')
 def index():
-    cur = get_db_connection()
-    cur.execute('SELECT * FROM coffee;')
-    coffee_products = cur.fetchall()
-    cur.close()
+    coffee_products = table.scan()
     return render_template('index.html', coffee_products=coffee_products)
 
 @app.route('/<int:product_id>')
