@@ -17,6 +17,12 @@ def get_product(product_vendor, product_id):
         abort(404)
     return product
 
+def get_vendor_products(product_vendor):
+    all_products = table.query(KeyConditionsExpression=Key('vendor').eq(product_vendor))
+    if all_products is None:
+        abort(404)
+    return all_products
+
 
 @app.route('/')
 def index():
@@ -27,3 +33,8 @@ def index():
 def single_product(product_vendor, product_id):
     product = get_product(product_vendor, product_id)
     return render_template('product.html', product=product)
+
+@app.route('/<product_vendor>')
+def vendor_products(product_vendor):
+
+
