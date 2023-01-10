@@ -11,7 +11,7 @@
             <div class="card h-100">
                 <img src="{{ coffee['images']}}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <a href="{{ url_for('single_product', product_id=coffee['id']) }}" class="stretched-link">
+                    <a href="{{ url_for('single_product', product_vendor=coffee['vendor'], product_id=coffee['id']) }}" class="stretched-link">
                         <h3 class="card-title">{{ coffee['title'] }}</h3>
                     </a>
                  <span class="badge bg-primary">{{ coffee['vendor'] }}</span>
