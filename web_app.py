@@ -5,6 +5,7 @@
 import boto3
 from flask import Flask, render_template
 from werkzeug.exceptions import abort
+from boto3.dynamodb.conditions import Key
 
 dynamodb_resource = boto3.resource('dynamodb')
 table = dynamodb_resource.Table('coffee_table')
@@ -18,7 +19,7 @@ def get_product(product_vendor, product_id):
     return product
 
 def get_vendor_products(product_vendor):
-    all_products = table.query(KeyConditionsExpression=Key('vendor').eq(product_vendor))
+    all_products = table.query(KeyConditionExpression=Key('vendor').eq(product_vendor))
     if all_products is None:
         abort(404)
     return all_products
@@ -29,12 +30,14 @@ def index():
     coffee_products = table.scan()
     return render_template('index.html', coffee_products=coffee_products)
 
+#Displays a single product
 @app.route('/<product_vendor>/<int:product_id>')
 def single_product(product_vendor, product_id):
     product = get_product(product_vendor, product_id)
     return render_template('product.html', product=product)
 
+#Displays all products of a vendor
 @app.route('/<product_vendor>')
 def vendor_products(product_vendor):
-
-
+    all_products = get_vendor_products(product_vendor)
+    return render_template('vendor_products.html', vendor_products=all_products)
