@@ -37,7 +37,7 @@ def single_product(product_vendor, product_id):
     return render_template('product.html', product=product)
 
 #Displays all products of a vendor
-@app.route('/<product_vendor>')
+@app.route('/roasters/<product_vendor>')
 def vendor_products(product_vendor):
     all_products = get_vendor_products(product_vendor)
     return render_template('vendor_products.html', vendor_products=all_products)
