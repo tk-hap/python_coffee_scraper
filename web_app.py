@@ -40,8 +40,8 @@ def index():
 #Display all vendors (roasters)
 @app.route('/roasters')
 def vendors():
-    all_vendors = get_vendors()
-    return render_template('vendors.html', all_vendors=all_vendors)
+    all_roasters = get_vendors()
+    return render_template('vendors.html', all_roasters=all_roasters)
 
 
 #Displays a single product
