@@ -85,7 +85,7 @@ coffee_df['region'] = coffee_df.apply(get_region, axis=1)
 coffee_df = coffee_df.astype(str)
 
 # Converts the ID field back to an int
-coffee_df['id'] = coffee_df['id'].astype(int64)
+#coffee_df['id'] = coffee_df['id'].astype(int64)
 
 #extract image url
 coffee_df['images'] = coffee_df['images'].str.extract(r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))", expand=True)[0]
