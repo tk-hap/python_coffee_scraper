@@ -1,3 +1,7 @@
 {% extends 'base.html' %}
-    {% for roaster in all_roasters['Items']}
-    <h2>"{{ roaster['id'] }}"</h2>
+
+{% block content %}
+    {% for roaster in all_roasters['Items'] %}
+    <h2>{{ roaster['id'] }}</h2>
+    {% endfor %}
+{% endblock %}
