@@ -19,7 +19,7 @@ def get_product(product_vendor, product_id):
     return product
 
 def get_vendors():
-    all_vendors = table.query(KeyConditionExpression=Key('vendor').begins_with('#roaster.'))
+    all_vendors = table.query(KeyConditionExpression=Key('vendor').eq('#Roaster'))
     if all_vendors is None:
         abort(404)
     return all_vendors
@@ -45,7 +45,7 @@ def vendors():
 
 
 #Displays a single product
-@app.route('/<product_vendor>/<int:product_id>')
+@app.route('/<product_vendor>/<product_id>')
 def single_product(product_vendor, product_id):
     product = get_product(product_vendor, product_id)
     return render_template('product.html', product=product)
