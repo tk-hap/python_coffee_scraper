@@ -24,6 +24,10 @@ def get_vendor_products(product_vendor):
         abort(404)
     return all_products
 
+def get_vendors():
+    all_vendors = table.query(KeyConditionExpression=Key('vendor').begins_with('#roaster.'))
+    return all_vendors
+
 
 @app.route('/')
 def index():
@@ -35,6 +39,11 @@ def index():
 def single_product(product_vendor, product_id):
     product = get_product(product_vendor, product_id)
     return render_template('product.html', product=product)
+
+#Displays list of roasters
+@app.route('/roasters')
+def vendors(all_vendors):
+        return render_template('vendors.html', all_vendors=all_vendors)
 
 #Displays all products of a vendor
 @app.route('/roasters/<product_vendor>')
