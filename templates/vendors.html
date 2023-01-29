@@ -2,6 +2,8 @@
 
 {% block content %}
     {% for roaster in all_roasters['Items'] %}
-    <h2>{{ roaster['id'] }}</h2>
+    <a href="{{ url_for('vendor_products', product_vendor=roaster['id']) }}">
+         <h2>{{ roaster['id'] }}</h2>
+    </a>
     {% endfor %}
 {% endblock %}
