@@ -18,3 +18,5 @@ def lambda_handler(event, context):
             
             bucket.upload_fileobj(r.raw, key)
             print(f"{image_url} was downloaded")
+
+# TO DO: Create event filter for "INSERT" events only. Put new image location into sqs for a lambda to update dynamo db. Connect to dynamodb streams Document better :)
