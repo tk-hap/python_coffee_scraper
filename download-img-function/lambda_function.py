@@ -11,20 +11,18 @@ sqs = boto3.client('sqs')
 def lambda_handler(event, context):
     for record in event["Records"]:
         if record['eventName'] == 'INSERT':
-            image_url = record['dynamodb']['NewImage']['image']['S']
+            print(f"Record = {record}")
+            image_url = record['dynamodb']['NewImage']['images']['S']
             roaster = record['dynamodb']['NewImage']['vendor']['S']
-            id = record['dynamodb']['NewImage']['id']['N']
+            id = record['dynamodb']['NewImage']['id']['S']
             key = roaster + "/" + id
             r = requests.get(image_url, stream=True)
-            
             bucket.upload_fileobj(r.raw, key)
-
-            message = { 'id': id, 'image': "s3://python-coffee-img/" + key}
+            
+            message = { 'id': id, 'vendor': roaster, 'image': "https://python-coffee-img.s3.amazonaws.com/" + key},
             sqs.send_message(
                 QueueUrl = "https://sqs.ap-southeast-2.amazonaws.com/373205127336/coffee-img-queue",
                 MessageBody = json.dumps(message)
             )
-            
             print(f"{image_url} was downloaded")
-
-# TO DO: Create event filter for "INSERT" events only. Put new image location into sqs for a lambda to update dynamo db. Connect to dynamodb streams Document better :)
+  
