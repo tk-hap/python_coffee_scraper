@@ -1,3 +1,5 @@
+#THIS LAMBDA NEEDS TO BE PACKAGED INTO A ZIP LOCALLY, REQUIRES REQUESTS PACKAGE
+
 import json
 import requests
 import boto3
