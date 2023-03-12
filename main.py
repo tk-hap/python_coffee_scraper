@@ -10,7 +10,7 @@ from  hashlib import blake2b
 COFFEE_SITES = ['https://folkbrewers.co.nz/products.json', 'https://greyroastingco.com/products.json', 'https://redrabbitcoffee.co.nz/products.json']
 products_json = {}
 products_all = pd.DataFrame()
-dynam_sess = boto3.Session(profile_name='tk-personal')
+dynam_sess = boto3.Session(profile_name='default')
 
 def get_json(url):
     """ 
@@ -51,7 +51,7 @@ def create_df(products_json, webpage_hashed):
 
 def filter_df(products_all):
     """
-    Filters products dataframe to only include individual coffee products
+    Filters products dataframe to only include individual coffee products and remove columns
 
     Parameters:
     products_all (dataframe): Unfiltered dataframe containing all Shopify products
@@ -64,6 +64,16 @@ def filter_df(products_all):
     cond_coffee = products_all['product_type'] == 'Coffee'
     cond_notSub = products_all['title'].str.contains('Subscription') == False
     coffee_df = products_all[cond_coffee & cond_notSub]
+
+    # Drop columns
+    coffee_df.drop(['tags', 'options', 'product_type', 'created_at'], axis=1, inplace=True)
+
+    # Rename columns
+    coffee_df.rename(columns = {'vendor':'pk', 'id':'sk'}, inplace=True)
+
+    # Add prefix to keys
+    coffee_df['sk'] = 'ID#' + coffee_df['sk'].astype(str)
+    coffee_df['pk'] = 'ROASTER#' + coffee_df['pk'].astype(str)
     return coffee_df
 
 def get_region(row):
@@ -81,6 +91,7 @@ for url in COFFEE_SITES:
 coffee_df = filter_df(products_all)
 # Add region to DF
 coffee_df['region'] = coffee_df.apply(get_region, axis=1)
+coffee_df['region_tag'] = 'REGION'
 # Converts total dataframe to str
 coffee_df = coffee_df.astype(str)
 
@@ -89,7 +100,8 @@ coffee_df = coffee_df.astype(str)
 
 #extract image url
 coffee_df['images'] = coffee_df['images'].str.extract(r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))", expand=True)[0]
-
+print(coffee_df.columns)
+# coffee_df.to_csv("test.csv")
 wr.dynamodb.put_df(df=coffee_df, table_name="coffee_table", boto3_session=dynam_sess)
 
 

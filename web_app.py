@@ -13,7 +13,7 @@ table = dynamodb_resource.Table('coffee_table')
 app = Flask(__name__)
  
 def get_product(product_vendor, product_id):
-    product = table.get_item(Key={'id':product_id, 'vendor':product_vendor})['Item']
+    product = table.query(KeyConditionExpression=Key('pk').eq('ROASTER#' + product_vendor) & Key('sk').eq('ID#' + product_id))['Item']
     if product is None:
         abort(404)
     return product
