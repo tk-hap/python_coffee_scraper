@@ -3,7 +3,7 @@
 {% block content %}
     {% for roaster in all_roasters %}
         <a href="{{ url_for('vendor_products', product_vendor=roaster['sk']) }}" class="stretched-link">
-        <h2>{{ roaster['sk'].split('ROASTER#')[1] }}</h2>
-         </a>
+            <h2>{{ roaster['sk'].split('ROASTER#')[1] }}</h2>
+        </a>
     {% endfor %}
 {% endblock %}
