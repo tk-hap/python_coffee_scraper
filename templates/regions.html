@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="list-group list-group-flush">
+    {% for region in all_regions %}
+        <a href="{{ url_for('regions') }}" class="fs-3 list-group-item list-group-item-action">{{ region['region'] }}</a>
+    {% endfor %}
+</div>
+{% endblock %}

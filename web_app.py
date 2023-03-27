@@ -24,6 +24,21 @@ def get_vendors():
         abort(404)
     return all_vendors
 
+def get_regions():
+    all_regions = table.query(
+    IndexName='region-index',
+    Select='SPECIFIC_ATTRIBUTES',
+    ProjectionExpression='#coffee_region',
+    ExpressionAttributeNames={ "#coffee_region": "region" },
+    KeyConditionExpression=Key('region_tag').eq('REGION')
+    )['Items']
+    # Remove duplicates
+    all_regions = list({ item['region'] : item for item in all_regions}.values())
+
+    if all_regions is None:
+        abort(404)
+    return all_regions
+
 def get_vendor_products(product_vendor):
     all_products = table.query(KeyConditionExpression=Key('pk').eq(product_vendor))
     if all_products is None:
@@ -43,6 +58,13 @@ def vendors():
     all_roasters = get_vendors()
     return render_template('vendors.html', all_roasters=all_roasters)
 
+#Displays all regions
+@app.route('/regions')
+def regions():
+    all_regions = get_regions()
+    return render_template('regions.html', all_regions=all_regions)
+
+
 
 #Displays a single product
 @app.route('/<product_vendor>/<product_id>')
@@ -55,3 +77,4 @@ def single_product(product_vendor, product_id):
 def vendor_products(product_vendor):
     all_products = get_vendor_products(product_vendor)
     return render_template('vendor_products.html', vendor_products=all_products)
+
