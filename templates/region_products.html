@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %}  {% endblock %}</h1>
+   
+    <div class="container text-center">
+        {% for products in region_products |batch(3) %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+         {% for product in products %}
+         <div class="col mb-3">
+            <div class="card h-100">
+                <img src="{{ product['images']}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <a href="{{ url_for('single_product', product_vendor=product['vendor'], product_id=product['id']) }}" class="stretched-link">
+                        <h3 class="card-title">{{ product['title'] }}</h3>
+                    </a>
+                 <span class="badge bg-primary">{{ product['vendor'] }}</span>
+                </div>
+            </div>
+         </div>
+        {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+{% endblock %}

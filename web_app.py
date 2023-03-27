@@ -45,6 +45,11 @@ def get_vendor_products(product_vendor):
         abort(404)
     return all_products
 
+def get_region_products(product_region):
+    all_region_products = table.query(IndexName='region-index', KeyConditionExpression=Key('region_tag').eq('REGION') & Key('region').eq(product_region))['Items']
+    if all_region_products is None:
+        abort(404)
+    return all_region_products
 
 
 @app.route('/')
@@ -65,7 +70,6 @@ def regions():
     return render_template('regions.html', all_regions=all_regions)
 
 
-
 #Displays a single product
 @app.route('/<product_vendor>/<product_id>')
 def single_product(product_vendor, product_id):
@@ -78,3 +82,7 @@ def vendor_products(product_vendor):
     all_products = get_vendor_products(product_vendor)
     return render_template('vendor_products.html', vendor_products=all_products)
 
+@app.route('/regions/<product_region>')
+def region_products(product_region):
+    all_products = get_region_products(product_region)
+    return render_template('region_products.html', region_products=all_products)
