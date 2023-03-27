@@ -82,6 +82,7 @@ def vendor_products(product_vendor):
     all_products = get_vendor_products(product_vendor)
     return render_template('vendor_products.html', vendor_products=all_products)
 
+#Displays all products of a region
 @app.route('/regions/<product_region>')
 def region_products(product_region):
     all_products = get_region_products(product_region)
