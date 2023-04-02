@@ -11,7 +11,22 @@ dynamodb_resource = boto3.resource('dynamodb')
 table = dynamodb_resource.Table('coffee_table')
 
 app = Flask(__name__)
- 
+def get_latest_products(roaster_values):
+    roaster_values = [x['sk'] for x in roaster_values]
+    latest_products = []
+    for roaster in roaster_values:
+        response_batch = table.query(
+            IndexName='latest-index',
+            KeyConditionExpression=Key('pk').eq(roaster),
+            Limit= 1,
+            ScanIndexForward = False
+            
+        )
+    
+        latest_products.append(response_batch['Items'])
+    return latest_products
+
+
 def get_product(product_vendor, product_id):
     product = table.query(KeyConditionExpression=Key('pk').eq(product_vendor) & Key('sk').eq(product_id))['Items'][0]
     if product is None:
@@ -54,8 +69,8 @@ def get_region_products(product_region):
 
 @app.route('/')
 def index():
-    coffee_products = table.scan()
-    return render_template('index.html', coffee_products=coffee_products)
+    latest_products = get_latest_products(get_vendors())
+    return render_template('index.html', coffee_products=latest_products)
 
 #Display all vendors (roasters)
 @app.route('/roasters')
