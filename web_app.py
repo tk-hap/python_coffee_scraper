@@ -11,10 +11,11 @@ dynamodb_resource = boto3.resource('dynamodb')
 table = dynamodb_resource.Table('coffee_table')
 
 app = Flask(__name__)
+
 def get_latest_products(roaster_values):
-    roaster_values = [x['sk'] for x in roaster_values]
+    roasters_list = [x['sk'] for x in roaster_values]
     latest_products = []
-    for roaster in roaster_values:
+    for roaster in roasters_list:
         response_batch = table.query(
             IndexName='latest-index',
             KeyConditionExpression=Key('pk').eq(roaster),
