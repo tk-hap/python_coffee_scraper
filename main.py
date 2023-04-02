@@ -6,11 +6,16 @@ import awswrangler as wr
 import boto3
 import pycountry
 from  hashlib import blake2b
+import datetime
 
 COFFEE_SITES = ['https://folkbrewers.co.nz/products.json', 'https://greyroastingco.com/products.json', 'https://redrabbitcoffee.co.nz/products.json']
 products_json = {}
 products_all = pd.DataFrame()
 dynam_sess = boto3.Session(profile_name='default')
+
+def timestamp_to_epoch(timestamp):
+    dt = datetime.datetime.fromisoformat(timestamp)
+    return int(dt.timestamp())
 
 def get_json(url):
     """ 
@@ -74,6 +79,10 @@ def filter_df(products_all):
     # Add prefix to keys
     coffee_df['sk'] = 'ID#' + coffee_df['sk'].astype(str)
     coffee_df['pk'] = 'ROASTER#' + coffee_df['pk'].astype(str)
+
+    # Convert published_at timestamp to epoch
+    coffee_df['published_at'] = coffee_df['published_at'].apply(timestamp_to_epoch)
+
     return coffee_df
 
 def get_region(row):
