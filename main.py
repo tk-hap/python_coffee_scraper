@@ -10,7 +10,7 @@ from  hashlib import blake2b
 COFFEE_SITES = ['https://folkbrewers.co.nz/products.json', 'https://greyroastingco.com/products.json', 'https://redrabbitcoffee.co.nz/products.json']
 products_json = {}
 products_all = pd.DataFrame()
-dynam_sess = boto3.Session(profile_name='default')
+dynam_sess = boto3.Session(profile_name='tk-personal')
 
 def get_json(url):
     """ 
@@ -95,8 +95,8 @@ coffee_df['region_tag'] = 'REGION'
 # Converts total dataframe to str
 coffee_df = coffee_df.astype(str)
 
-# Converts the ID field back to an int
-#coffee_df['id'] = coffee_df['id'].astype(int64)
+# Converts the Published_at field back to an int
+coffee_df['published_at'] = coffee_df['published_at'].astype(int64)
 
 #extract image url
 coffee_df['images'] = coffee_df['images'].str.extract(r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))", expand=True)[0]
