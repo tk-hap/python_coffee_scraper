@@ -4,7 +4,7 @@
     <h1>{% block title %}  {% endblock %}</h1>
    
     <div class="container text-center">
-        {% for coffees in coffee_products['Items']|batch(3) %}
+        {% for coffees in coffee_products|batch(3) %}
         <div class="row row-cols-1 row-cols-md-3 g-4">
          {% for coffee in coffees %}
          <div class="col mb-3">

@@ -24,7 +24,7 @@ def get_latest_products(roaster_values):
             
         )
     
-        latest_products.append(response_batch['Items'])
+        latest_products.extend(response_batch['Items'])
     return latest_products
 
 
