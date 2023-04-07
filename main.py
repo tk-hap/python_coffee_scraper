@@ -20,27 +20,22 @@ def timestamp_to_epoch(timestamp):
 def get_json(url):
     """ 
     Takes URL and returns JSON data from Shopify products page.
-    Additionally hashes the current data to be added to the dataframe later
+
 
     Parameters:
     url (str): A website URL ie. https://thisisaurl.com/products.json
 
     Returns:
     products_json (dict): Dictionary containing JSON data from the URL
-    webpage_hashed (str): A hash created from the webpage, used for comparison
+
     """
-    #Initialize hashing
-    hashing = blake2b(digest_size=10)
     # Get data from url using requests
     url_content = requests.get(url)
-    #Create hash from url data
-    hashing.update(url_content.content)
-    webpage_hashed = hashing.hexdigest()
     # Turn request into json
     products_json = url_content.json()
-    return products_json, webpage_hashed
+    return products_json
 
-def create_df(products_json, webpage_hashed):
+def create_df(products_json):
     """
     Converts JSON dictionary to a pandas dataframe
 
@@ -51,7 +46,6 @@ def create_df(products_json, webpage_hashed):
     products_df (dataframe): Pandas dataframe containing the JSON Shopify products 
     """
     products_df = pd.DataFrame.from_dict(products_json['products'])
-    products_df.insert(2, "page_hash", webpage_hashed, True)
     return products_df
 
 def filter_df(products_all):
@@ -112,7 +106,3 @@ coffee_df['images'] = coffee_df['images'].str.extract(r"(?i)\b((?:https?://|www\
 print(coffee_df.columns)
 # coffee_df.to_csv("test.csv")
 wr.dynamodb.put_df(df=coffee_df, table_name="coffee_table", boto3_session=dynam_sess)
-
-
-
-
