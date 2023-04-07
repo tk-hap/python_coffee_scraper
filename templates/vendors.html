@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% for roaster in all_roasters['Items'] %}
-    <h2>{{ roaster['id'] }}</h2>
+<div class="list-group list-group-flush">
+    {% for roaster in all_roasters %}
+        <a href="{{ url_for('vendor_products', product_vendor=roaster['sk']) }}" class="fs-3 list-group-item list-group-item-action">{{ roaster['sk'].split('ROASTER#')[1] }}</a>
     {% endfor %}
+</div>
 {% endblock %}
