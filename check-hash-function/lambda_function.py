@@ -2,11 +2,7 @@ from  hashlib import blake2b
 import requests
 import boto3
 from boto3.dynamodb.conditions import Key
-import os
 import json
-
-os.environ['AWS_PROFILE'] = "tk-personal"
-os.environ['AWS_DEFAULT_REGION'] = "ap-southeast-2"
 
 
 dynamodb_resource = boto3.resource('dynamodb', region_name='ap-southeast-2') 
@@ -29,36 +25,36 @@ def get_hash(url):
     return webpage_hashed
 
 # Loop through all roasters, if stored hash doesn't match the new hash, delete all existing items and write a message to an sqs queue
-
-for vendor in get_vendors():
-    new_hash = get_hash(vendor['url']+"/products.json")
-    if vendor['page_hash'] == new_hash:
-        continue
-    else:
-        partition_key_value = vendor['sk']
-        response_vendor = table.query(
-        KeyConditionExpression='pk = :val',
-        ExpressionAttributeValues={
-        ':val': partition_key_value
-            }
-        )
-        with table.batch_writer() as batch:
-            for item in response_vendor['Items']:
-                batch.delete_item(Key={'pk': item['pk'], 'sk': item['sk']})   
-        print(f'All items with partition key {partition_key_value} deleted.')
-        
-        message = { 'url': vendor['url']+"/products.json", 'roaster': vendor['sk']},
-        sqs.send_message(
-            QueueUrl = "sqs queue",
-            MessageBody = json.dumps(message)
-        )       
-        
-        response_update = table.update_item(
-            Key={'pk': vendor['pk'], 'sk': vendor['sk']},
-            UpdateExpression='SET page_hash = :val',
+def lambda_handler(event, context):
+    for vendor in get_vendors():
+        new_hash = get_hash(vendor['url']+"/products.json")
+        if vendor['page_hash'] == new_hash:
+            continue
+        else:
+            partition_key_value = vendor['sk']
+            response_vendor = table.query(
+            KeyConditionExpression='pk = :val',
             ExpressionAttributeValues={
-                ':val': new_hash
-            }
-        )
+            ':val': partition_key_value
+                }
+            )
+            with table.batch_writer() as batch:
+                for item in response_vendor['Items']:
+                    batch.delete_item(Key={'pk': item['pk'], 'sk': item['sk']})   
+            print(f'All items with partition key {partition_key_value} deleted.')
+            
+            message = { 'url': vendor['url']+"/products.json", 'roaster': vendor['sk']},
+            sqs.send_message(
+                QueueUrl = "https://sqs.ap-southeast-2.amazonaws.com/373205127336/coffee-products-queue",
+                MessageBody = json.dumps(message)
+            )       
+            
+            response_update = table.update_item(
+                Key={'pk': vendor['pk'], 'sk': vendor['sk']},
+                UpdateExpression='SET page_hash = :val',
+                ExpressionAttributeValues={
+                    ':val': new_hash
+                }
+            )
 
 
