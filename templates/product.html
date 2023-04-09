@@ -1,8 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <img src="{{ product['images'] }}" class="img-fluid" alt="{{ product['handle'] }}">
-    <h2>{% block title %} {{ product['title'] }} {% endblock %}</h2>
-    <span class="badge bg-primary">{{ product['vendor'] }}</span>
-    <p>{{ product['body_html'] | safe }}</p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ product['images'] }}" class="img-fluid rounded" alt="{{ product['handle'] }}">
+          </div>  
+      <div class="col-md-6">
+        <h2>{% block title %} {{ product['title'] }} {% endblock %}</h2>
+        <span class="badge bg-primary">{{ product['vendor'] }}</span>
+        <p>{{ product['body_html'] | safe }}</p>
+      </div>
+
+    </div>
+  </div>
+    
 {% endblock %}
+

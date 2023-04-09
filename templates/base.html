@@ -11,7 +11,7 @@
     <title>{% block title %} {% endblock %}</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-4 ">
+    <nav class="navbar navbar-expand-lg navbar-light py-3 bg-dark" style="background-color: #e6ddc5;"">
       <div class="container-xl">
         <a class="navbar-brand" href="{{ url_for('index')}}" mb-0 h1>Community Grounds</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,7 +29,7 @@
         </div>
       </div>
     </nav>
-    <div class="container">
+    <div class="container pt-5">
         {% block content %} {% endblock %}
     </div>
     <!-- Optional JavaScript -->
