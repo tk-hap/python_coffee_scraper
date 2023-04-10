@@ -3,4 +3,4 @@
 Serverless, built in python.
 
 ## Back-end
-![Backend diagram](/app_diagram.svg)
+![Backend diagram](/AWS-Diagram.png)
