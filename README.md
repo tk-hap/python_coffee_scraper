@@ -2,5 +2,5 @@
 
 Serverless, built in python.
 
-## Back-end
+## Architecture
 ![Backend diagram](/AWS-Diagram.svg)
