@@ -57,7 +57,7 @@ def filter_df(products_all):
     coffee_df (dataframe): Filtered dataframe
     
     """
-    product_conditions = ['Coffee', 'COFFEE']
+    product_conditions = ['Coffee', 'COFFEE', 'Coffee Retail']
     # Conditions to filter data from dataframes
     cond_coffee = products_all['product_type'].isin(product_conditions)
     cond_notSub = products_all['title'].str.contains('Subscription') == False
