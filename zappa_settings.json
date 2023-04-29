@@ -7,5 +7,18 @@
         "runtime": "python3.8",
         "s3_bucket": "zappa-ts8olgg7w",
         "slim_handler": true
+    },
+    "production": {
+        "app_function": "web_app.app",
+        "aws_region": "ap-southeast-2",
+        "profile_name": "tk-personal",
+        "project_name": "python-coffee-",
+        "runtime": "python3.8",
+        "s3_bucket": "zappa-prod-coffee-scraper",
+        "slim_handler": true,
+        "certificate_arn": "arn:aws:acm:us-east-1:373205127336:certificate/e32265c4-d564-4a87-90d0-f4ab4d539190",
+        "domain": "communitygrounds.co.nz",
+        "route53_enabled": false
+
     }
 }
