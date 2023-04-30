@@ -2,6 +2,32 @@
 
 {% block content %}
     <h1>{% block title %}  {% endblock %}</h1>
+    <section class="bg-light pb-5 pt-5" data-pg-collapsed> 
+        <div class="container pb-5 pt-5"> 
+            <div class="align-items-center mb-3 row"> 
+                <div class="col-lg-7"> 
+                    <h3 class="fw-bold h2 mb-1">All the best roasters NZ roaster in one place</h3>
+                    <p class="fw-light">                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae congue tortor. </p> 
+                </div>                     
+                <div class="col-lg-auto ms-auto">                          
+                </div>                     
+            </div>                 
+            <div class="row"> 
+                <div class="col-sm-6 col-xl-3 pb-3 pt-3"> <a href="#" class="btn btn-light d-block p-3 pb-5 ps-4 pe-4 pt-5 shadow text-start"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" fill="currentColor" class="mb-3"> 
+                            <path d="M3 3h18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm13.464 12.536L20 12l-3.536-3.536L15.05 9.88 17.172 12l-2.122 2.121 1.414 1.415zM6.828 12L8.95 9.879 7.536 8.464 4 12l3.536 3.536L8.95 14.12 6.828 12zm4.416 5l3.64-10h-2.128l-3.64 10h2.128z"></path>                                 
+                        </svg> <h4 class="fw-bold h5">Development</h4> <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae congue tortor.</p> </a> 
+                </div>                     
+                <div class="col-sm-6 col-xl-3 pb-3 pt-3"> <a href="#" class="btn btn-light d-block p-3 pb-5 ps-4 pe-4 pt-5 shadow text-start"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" fill="currentColor" class="mb-3"> 
+                            <path d="M5.636 12.707l1.828 1.829L8.88 13.12 7.05 11.293l1.414-1.414 1.829 1.828 1.414-1.414L9.88 8.464l1.414-1.414L13.12 8.88l1.415-1.415-1.829-1.828 2.829-2.828a1 1 0 0 1 1.414 0l4.242 4.242a1 1 0 0 1 0 1.414L8.464 21.192a1 1 0 0 1-1.414 0L2.808 16.95a1 1 0 0 1 0-1.414l2.828-2.829zm8.485 5.656l4.243-4.242L21 16.757V21h-4.242l-2.637-2.637zM5.636 9.878L2.807 7.05a1 1 0 0 1 0-1.415l2.829-2.828a1 1 0 0 1 1.414 0L9.88 5.635 5.636 9.878z"></path>                                 
+                        </svg> <h4 class="fw-bold h5">Product Design</h4> <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae congue tortor.</p> </a> 
+                </div>                     
+                <div class="col-sm-6 col-xl-3 pb-3 pt-3">                          
+                </div>                     
+                <div class="col-sm-6 col-xl-3 pb-3 pt-3">                          
+                </div>                     
+            </div>                 
+        </div>             
+    </section>
     <h2>Latest coffees</h2>
     <div class="container text-center">
         {% for coffees in coffee_products|batch(3) %}

@@ -6,6 +6,15 @@ import boto3
 from flask import Flask, render_template
 from werkzeug.exceptions import abort
 from boto3.dynamodb.conditions import Key
+from zappa.handler import lambda_handler
+import epsagon
+
+epsagon.init(
+  token='2f3130c9-52a3-41ba-b6d4-a2d6fb05456d',
+  app_name='CommunityGrounds - Coffee Scraper',
+  metadata_only=False,
+)
+epsagon_handler = epsagon.lambda_wrapper(lambda_handler)
 
 dynamodb_resource = boto3.resource('dynamodb')
 table = dynamodb_resource.Table('coffee_table')
@@ -18,7 +27,7 @@ def get_latest_products(roaster_values):
     for roaster in roasters_list:
         response_batch = table.query(
             IndexName='latest-index',
-            KeyConditionExpression=Key('pk').eq(roaster),
+            KeyConditionExpression=Key('pk').eq(roaster),   
             Limit= 1,
             ScanIndexForward = False
             
