@@ -13,7 +13,9 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark py-3 bg-dark">
       <div class="container-xl">
-        <a class="navbar-brand" href="{{ url_for('index')}}" mb-0 h1>Community Grounds</a>
+        <a class="navbar-brand" href="{{ url_for('index')}}">
+          <img src="https://python-coffee-img.s3.ap-southeast-2.amazonaws.com/static/com-grnds-logo-clr.svg" alt="Community Grounds" width="50" height="50">
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -29,7 +31,7 @@
         </div>
       </div>
     </nav>
-    <div class="container pt-5">
+    <div class="container bg-light  pt-5">
         {% block content %} {% endblock %}
     </div>
     <!-- Optional JavaScript -->
