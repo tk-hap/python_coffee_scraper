@@ -1,31 +1,13 @@
-import boto3
-from flask import Flask, render_template
-from werkzeug.exceptions import abort
-from boto3.dynamodb.conditions import Key
-dynam_sess = boto3.Session(profile_name='default')
-dynamodb_resource = dynam_sess.resource('dynamodb')
-table = dynamodb_resource.Table('coffee_table')
+import requests
+import pandas as pd
+
+url = "https://slowcoffeeroasters.org/store-1?format=json-pretty"
+url_content = requests.get(url)
+# Turn request into json
+products_json = url_content.json()
 
 
+products_df = pd.DataFrame.from_dict(products_json['items'])
 
 
-pk_values = ["Red Rabbit Coffee Co.", "Grey Roasting Co"]
-items = []
-
-all_vendors = table.query(KeyConditionExpression=Key('pk').eq('ROASTER'))['Items']
-
-
-
-roaster_values = [x['sk'] for x in all_vendors]
-latest_products = []
-for roaster in roaster_values:
-        response_batch = table.query(
-            IndexName='latest-index',
-            KeyConditionExpression=Key('pk').eq(roaster),
-            Limit= 1,
-            ScanIndexForward = False
-            
-        )
-    
-        latest_products.append(response_batch['Items'])
-print(latest_products)
+products_df.to_csv('test-slow.csv')
