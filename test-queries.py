@@ -6,6 +6,7 @@ import boto3
 import pycountry
 import datetime
 import json
+import ast
 # ='Subscription'
 #Create a class called roaster website
 class RoasterWebsite:
@@ -14,7 +15,7 @@ class RoasterWebsite:
         self.vendor = vendor
         self.product_section = product_section
         self.convert_timestamp = convert_timestamp
-        self.category_conditions = category_conditions
+        self.category_conditions = ast.literal_eval(category_conditions)
         self.country_column = country_column
         self.category_column = category_column
         self.title_column = title_column
@@ -29,11 +30,15 @@ class RoasterWebsite:
         return int(dt.timestamp())
     
     def get_region(self, row):
+        found = False
         for country in pycountry.countries:
             if country.name.lower() in row[self.country_column].lower():
+                found = True
                 return country.name
-            else:
-                return 'Other' # If no country is found, return 'Other'
+        if not found:
+            return 'Other'
+            # elif country.name.lower() not in row[self.country_column].lower():
+            #     return "Other"
         
     def json(self):
         """ 
@@ -101,35 +106,31 @@ class RoasterWebsite:
         
         return coffee_df
 
+# Connect to DynamoDBtk-personal
+session = boto3.Session(profile_name='tk-personal')
 
+dynamodb = session.resource('dynamodb', region_name='ap-southeast-2')
+table = dynamodb.Table('coffee_table')
 
-# url = 'https://littledrumcoffee.co.nz/shop?format=json-pretty'
-# product_conditions = ['Coffee', 'COFFEE', 'Coffee Retail']
-# product_section = 'items'
-# product_type = ''
-# category_fields = 
+# Retrieve the parameters dictionary from DynamoDB
+response = table.get_item(Key={'pk':'TEST', 'sk':'ROASTER#Little Drum Coffee'})
+item = response['Item']
+retrieved_params = item['params']
+
+print(retrieved_params['category_conditions'])
 
 website = RoasterWebsite(
-                        url='https://littledrumcoffee.co.nz/shop?format=json-pretty',
-                        vendor='Little Drum Coffee',
-                        product_section='items',
-                        convert_timestamp=False,
-                        category_column='categories',
-                        category_conditions=[['SINGLE ORIGIN'], ['BLEND']],
-                        country_column='title',
-                        title_column='title',
-                        title_conditions='Subscription',
-                        columns={
-                            'pk':'pk', #pk is added in the filtered_products_df method
-                            'id':'sk',
-                            'excerpt':'body_html',
-                            'assetUrl':'images',
-                            'publishOn':'published_at',
-                            'title':'title',
-                            'updatedOn':'updated_at',
-                            'variants': 'variants'
-                            }
-                        )
+                        url                 =   retrieved_params['url'],
+                        vendor              =   retrieved_params['vendor'],
+                        product_section     =   retrieved_params['product_section'],
+                        convert_timestamp   =   retrieved_params['convert_timestamp'],
+                        category_column     =   retrieved_params['category_column'],
+                        category_conditions =   retrieved_params['category_conditions'],
+                        country_column      =   retrieved_params['country_column'],
+                        title_column        =   retrieved_params['title_column'],
+                        title_conditions    =   retrieved_params['title_conditions'],
+                        columns             =   retrieved_params['columns']
+                        )   
 
         
 
