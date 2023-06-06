@@ -100,6 +100,9 @@ class RoasterWebsite:
         # Add region to DF
         coffee_df['region'] = coffee_df.apply(self.get_region, axis=1)
         coffee_df['region_tag'] = 'REGION'
+
+        # Extract image url
+        coffee_df['images'] = coffee_df['images'].str.extract(r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))", expand=True)[0]
         if self.convert_timestamp == True:
              # Convert published_at timestamp to epoch
             coffee_df['published_at'] = coffee_df['published_at'].apply(self.timestamp_to_epoch)
