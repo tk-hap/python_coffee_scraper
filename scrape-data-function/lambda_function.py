@@ -111,35 +111,33 @@ class RoasterWebsite:
         
         return coffee_df
 
-def get_region(row):
-    for country in pycountry.countries:
-        if country.name.lower() in row['handle'].lower():
-            return country.name
-
 def lambda_handler(event, context):
     for record in event['Records']:
         global products_all
         #Get URL
-        payload = record["body"]
+        payload = record['body']
         payload_json = json.loads(payload)
-        url = payload_json[0]["url"]
+        retrieved_params = payload_json[0]['params']
+ 
+        website = RoasterWebsite(
+                        url                 =   retrieved_params['url'],
+                        vendor              =   retrieved_params['vendor'],
+                        product_section     =   retrieved_params['product_section'],
+                        convert_timestamp   =   retrieved_params['convert_timestamp'],
+                        category_column     =   retrieved_params['category_column'],
+                        category_conditions =   retrieved_params['category_conditions'],
+                        country_column      =   retrieved_params['country_column'],
+                        title_column        =   retrieved_params['title_column'],
+                        title_conditions    =   retrieved_params['title_conditions'],
+                        columns             =   retrieved_params['columns']
+                        )   
 
-        products_json = get_json(url)
-        products_df = create_df(products_json)
-        products_all = pd.concat([products_all, products_df], ignore_index=True)
-        
-
-    coffee_df = filter_df(products_all)
-    # Add region to DF
-    coffee_df['region'] = coffee_df.apply(get_region, axis=1)
-    coffee_df['region_tag'] = 'REGION'
+    coffee_df = website.filtered_products_df()
     # Converts total dataframe to str
     coffee_df = coffee_df.astype(str)
-
     # Converts the Published_at field back to an int
     coffee_df['published_at'] = coffee_df['published_at'].astype(int64)
-
-    #extract image url
+    
     print(coffee_df.columns)
     # coffee_df.to_csv("test.csv")
     wr.dynamodb.put_df(df=coffee_df, table_name="coffee_table")
