@@ -43,7 +43,7 @@ def lambda_handler(event, context):
                     batch.delete_item(Key={'pk': item['pk'], 'sk': item['sk']})   
             print(f'All items with partition key {partition_key_value} deleted.')
             
-            message = { 'url': vendor['url']+"/products.json", 'roaster': vendor['sk']},
+            message = {'roaster': vendor['sk'], 'params': vendor['params']},
             sqs.send_message(
                 QueueUrl = "https://sqs.ap-southeast-2.amazonaws.com/373205127336/coffee-products-queue",
                 MessageBody = json.dumps(message)
