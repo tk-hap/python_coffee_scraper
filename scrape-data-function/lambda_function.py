@@ -7,6 +7,7 @@ import boto3
 import pycountry
 import datetime
 import json
+import ast
 
 products_json = {}
 products_all = pd.DataFrame()
@@ -27,7 +28,7 @@ class RoasterWebsite:
         # self.image_url = image_url
         # self.region_txt = region_txt
 
-    def timestamp_to_epoch(timestamp):
+    def timestamp_to_epoch(self, timestamp):
         dt = datetime.datetime.fromisoformat(timestamp)
         return int(dt.timestamp())
     
@@ -104,6 +105,7 @@ class RoasterWebsite:
         coffee_df['region_tag'] = 'REGION'
 
         # Extract image url
+        coffee_df['images'] = coffee_df['images'].astype(str)
         coffee_df['images'] = coffee_df['images'].str.extract(r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))", expand=True)[0]
         if self.convert_timestamp == True:
              # Convert published_at timestamp to epoch
